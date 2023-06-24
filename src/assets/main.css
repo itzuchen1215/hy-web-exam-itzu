@@ -1,0 +1,10 @@
+html {
+  min-width: 320px;
+}
+
+#app {
+  position: relative;
+  background: black;
+  height: 100vh;
+  max-height: 100svh;
+}
