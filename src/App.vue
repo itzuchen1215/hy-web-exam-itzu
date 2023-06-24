@@ -1,39 +1,35 @@
 <script setup lang="ts">
-import { ref, provide } from 'vue';
-import axios from 'axios';
-import type { IVideoListResponse } from '@/types/api';
-import { ListType } from '@/types/enum';
-import VideoSwiper from '@/components/VideoSwiper.vue';
+import { ref, provide } from 'vue'
+import axios from 'axios'
+import type { IVideoListResponse } from '@/types/api'
+import { ListType } from '@/types/enum'
+import VideoSwiper from '@/components/VideoSwiper.vue'
 
-const activeName = ref<ListType>(ListType.ForYou);
-const followingList = ref<IVideoListResponse[]>([]);
-const forYouList = ref<IVideoListResponse[]>([]);
-
-axios({
-  method: 'get',
-  url: '/api/following_list',
-})
-.then(res => {
-  followingList.value = res.data.items;
-});
+const activeName = ref<ListType>(ListType.ForYou)
+const followingList = ref<IVideoListResponse[]>([])
+const forYouList = ref<IVideoListResponse[]>([])
 
 axios({
   method: 'get',
-  url: '/api/for_you_list',
+  url: '/api/following_list'
+}).then((res) => {
+  followingList.value = res.data.items
 })
-.then(res => {
-  forYouList.value = res.data.items;
-});
 
-const muted = ref<boolean>(true);
+axios({
+  method: 'get',
+  url: '/api/for_you_list'
+}).then((res) => {
+  forYouList.value = res.data.items
+})
 
+const muted = ref<boolean>(true)
 
 function handleClickMuteButton() {
-  muted.value = !muted.value;
+  muted.value = !muted.value
 }
 
-provide('muted', muted);
-
+provide('muted', muted)
 </script>
 
 <template>
@@ -70,12 +66,11 @@ provide('muted', muted);
   --van-tab-font-size: 16px;
   --van-tabs-line-height: 40px;
   --van-tabs-bottom-bar-width: 20px;
-  --van-tabs-bottom-bar-color: #FFF;
+  --van-tabs-bottom-bar-color: #fff;
   --van-tabbar-height: 40px;
   --van-tabbar-item-icon-size: 16px;
   --van-tabbar-item-font-size: 11px;
 }
-
 
 .van-config-provider {
   width: 100%;
@@ -134,7 +129,7 @@ provide('muted', muted);
 .van-tab {
   &__text {
     font-weight: 600;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   }
 }
 </style>

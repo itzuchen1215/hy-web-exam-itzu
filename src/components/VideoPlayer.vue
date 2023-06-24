@@ -1,35 +1,38 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, watch, inject, type Ref } from 'vue';
-import videojs from 'video.js';
+import { ref, onMounted, onBeforeUnmount, watch, inject, type Ref } from 'vue'
+import videojs from 'video.js'
 
 const props = defineProps({
   videoSrc: String,
   videoType: {
     type: String,
-    default: 'application/x-mpegURL',
+    default: 'application/x-mpegURL'
   },
   videoActive: {
     type: Boolean,
-    default: false,
+    default: false
   },
-  poster: String,
-});
+  poster: String
+})
 
-const muted = inject<Ref<boolean>>('muted');
+const muted = inject<Ref<boolean>>('muted')
 
-const videoPlayer = ref<HTMLVideoElement | null>(null);
-const player = ref<typeof videojs.players | null>(null);
+const videoPlayer = ref<HTMLVideoElement | null>(null)
+const player = ref<typeof videojs.players | null>(null)
 
-watch(() => props.videoActive, (v) => {
-  if (player.value) {
-    if (v) {
-      player.value.play();
-    } else {
-      player.value.pause();
+watch(
+  () => props.videoActive,
+  (v) => {
+    if (player.value) {
+      if (v) {
+        player.value.play()
+      } else {
+        player.value.pause()
+      }
     }
-  }
-}, { immediate: true});
-
+  },
+  { immediate: true }
+)
 
 onMounted(() => {
   if (videoPlayer.value) {
@@ -44,7 +47,7 @@ onMounted(() => {
           seekBar: {
             loadProgressBar: true,
             mouseTimeDisplay: false,
-            playProgressBar: true,
+            playProgressBar: true
           },
           progressControl: false,
           durationDisplay: true, // total time
@@ -59,37 +62,40 @@ onMounted(() => {
           customControlSpacer: false,
           pictureInPictureToggle: false
         }
-      },
-    });
+      }
+    })
 
     // TODO: 桌機版會有問題
     player.value.on('click', () => {
       if (player.value.paused()) {
-        player.value.play();
+        player.value.play()
       } else {
-        player.value.pause();
+        player.value.pause()
       }
-    });
+    })
 
     // autoplay the first video
     player.value.on('loadeddata', () => {
       if (props.videoActive) {
-        player.value.play();
+        player.value.play()
       }
-    });
+    })
 
     if (muted) {
-      watch(() => muted.value, (isMuted: boolean)=> {
-        player.value.muted(isMuted);
-      }, { immediate: true });
+      watch(
+        () => muted.value,
+        (isMuted: boolean) => {
+          player.value.muted(isMuted)
+        },
+        { immediate: true }
+      )
     }
-    
   }
-});
+})
 
 onBeforeUnmount(() => {
-  player.value.dispose();
-});
+  player.value.dispose()
+})
 </script>
 
 <template>
@@ -101,7 +107,7 @@ onBeforeUnmount(() => {
     :poster="poster"
     :autoplay="videoActive"
   >
-    <source :src="videoSrc" :type="videoType">
+    <source :src="videoSrc" :type="videoType" />
   </video>
 </template>
 
@@ -141,7 +147,7 @@ onBeforeUnmount(() => {
     position: absolute;
     bottom: 0;
     left: 0;
-    background-color: #FFF;
+    background-color: #fff;
     opacity: 0.8;
   }
   &-control {
@@ -157,7 +163,7 @@ onBeforeUnmount(() => {
       width: 50px;
       height: 50px;
       &:before {
-        content: "";
+        content: '';
         background-image: url('data:image/svg+xml;base64,PHN2ZyBmaWxsPSIjRkZGIiBoZWlnaHQ9Ijc3cHgiIHdpZHRoPSI3N3B4IiB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxwYXRoIGQ9Ik01MDAuMjAzLDIzNi45MDdMMzAuODY5LDIuMjRjLTYuNjEzLTMuMjg1LTE0LjQ0My0yLjk0NC0yMC43MzYsMC45MzlDMy44NCw3LjA4MywwLDEzLjkzMSwwLDIxLjMzM3Y0NjkuMzMzIGMwLDcuNDAzLDMuODQsMTQuMjUxLDEwLjEzMywxOC4xNTVjMy40MTMsMi4xMTIsNy4yOTYsMy4xNzksMTEuMiwzLjE3OWMzLjI2NCwwLDYuNTI4LTAuNzQ3LDkuNTM2LTIuMjRsNDY5LjMzMy0yMzQuNjY3IEM1MDcuNDM1LDI3MS40NjcsNTEyLDI2NC4wODUsNTEyLDI1NlM1MDcuNDM1LDI0MC41MzMsNTAwLjIwMywyMzYuOTA3eiIvPgoKPC9zdmc+');
         background-repeat: no-repeat;
         background-size: 46px;
@@ -226,15 +232,15 @@ onBeforeUnmount(() => {
   bottom: 30px;
   left: 50%;
   transform: translateX(-50%);
-  color: #FFF;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  color: #fff;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   font-size: 26px;
   font-weight: 600;
 }
 
 .vjs-duration {
   left: calc(50% + 45px);
-  color: #FFFFFF70;
+  color: #ffffff70;
 }
 .vjs-current-time {
   left: calc(50% - 45px);

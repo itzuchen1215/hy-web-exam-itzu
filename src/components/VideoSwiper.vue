@@ -1,47 +1,46 @@
 <script setup lang="ts">
-import { ref, type PropType, computed } from 'vue';
-import { useWindowSize } from '@vant/use';
-import type { IVideoListResponse } from '@/types/api';
-import VideoPlayer from '@/components/VideoPlayer.vue';
-import type { SwipeInstance } from 'vant';
+import { ref, type PropType, computed } from 'vue'
+import { useWindowSize } from '@vant/use'
+import type { IVideoListResponse } from '@/types/api'
+import VideoPlayer from '@/components/VideoPlayer.vue'
+import type { SwipeInstance } from 'vant'
 
 const props = defineProps({
   tabActive: {
     type: Boolean,
-    default: false,
+    default: false
   },
   videoList: {
     type: Array as PropType<IVideoListResponse[]>,
-    default: () => [],
-  },
-});
+    default: () => []
+  }
+})
 
-const { height } = useWindowSize();
-const videoSwiper = ref<SwipeInstance | null>(null);
+const { height } = useWindowSize()
+const videoSwiper = ref<SwipeInstance | null>(null)
 
-const activeSwipeIndex = ref<number>(0);
-const isDragStart = ref<boolean>(false);
+const activeSwipeIndex = ref<number>(0)
+const isDragStart = ref<boolean>(false)
 
 const swipeItemHeight = computed(() => {
-  return height.value - 40;
-});
+  return height.value - 40
+})
 
 function handleSwipeChange(index: number) {
-  activeSwipeIndex.value = index;
-};
+  activeSwipeIndex.value = index
+}
 
 function handleDragStart() {
-  isDragStart.value = true;
+  isDragStart.value = true
 }
 
 function handleDragEnd() {
-  isDragStart.value = false;
+  isDragStart.value = false
 }
 
 function isItemActive(index: number) {
-  return props.tabActive && (index === activeSwipeIndex.value);
+  return props.tabActive && index === activeSwipeIndex.value
 }
-
 </script>
 
 <template>
@@ -57,8 +56,17 @@ function isItemActive(index: number) {
     @change="handleSwipeChange"
   >
     <van-swipe-item v-for="(item, index) in videoList" :key="index">
-      <img class="video-cover" v-show="isItemActive(index) && isDragStart" :src="item.cover" :alt="item.title">
-      <VideoPlayer :video-src="item['play_url']" :video-active="isItemActive(index)" :poster="item.cover" />
+      <img
+        class="video-cover"
+        v-show="isItemActive(index) && isDragStart"
+        :src="item.cover"
+        :alt="item.title"
+      />
+      <VideoPlayer
+        :video-src="item['play_url']"
+        :video-active="isItemActive(index)"
+        :poster="item.cover"
+      />
     </van-swipe-item>
   </van-swipe>
 </template>
