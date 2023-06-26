@@ -2,6 +2,8 @@
 import { ref, onMounted, onBeforeUnmount, watch, inject, type Ref } from 'vue'
 import videojs from 'video.js'
 
+const emit = defineEmits(['touchstart'])
+
 const props = defineProps({
   videoSrc: String,
   videoType: {
@@ -65,31 +67,39 @@ onMounted(() => {
       }
     })
 
-    // TODO: 桌機版會有問題
-    player.value.on('click', () => {
-      if (player.value.paused()) {
-        player.value.play()
-      } else {
-        player.value.pause()
+    player.value.ready(() => {
+
+      player.value.on('click', () => {
+        emit('touchstart');
+        if (player.value.paused()) {
+          player.value.play()
+        } else {
+          player.value.pause()
+        }
+      })
+
+      // Prevent the conflict between the first drag of the seekBar and the swipe event
+      player.value.one('touchstart', () => {
+        emit('touchstart');
+      });
+
+      // Autoplay the first video
+      player.value.on('loadeddata', () => {
+        if (props.videoActive) {
+          player.value.play()
+        }
+      })
+
+      if (muted) {
+        watch(
+          () => muted.value,
+          (isMuted: boolean) => {
+            player.value.muted(isMuted)
+          },
+          { immediate: true }
+        )
       }
     })
-
-    // autoplay the first video
-    player.value.on('loadeddata', () => {
-      if (props.videoActive) {
-        player.value.play()
-      }
-    })
-
-    if (muted) {
-      watch(
-        () => muted.value,
-        (isMuted: boolean) => {
-          player.value.muted(isMuted)
-        },
-        { immediate: true }
-      )
-    }
   }
 })
 
@@ -198,7 +208,7 @@ onBeforeUnmount(() => {
   height: 30px;
   &:before {
     content: '';
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.4) 0%, transparent 100%);
+    background: linear-gradient(0deg, rgba(0, 0, 0, 0.3) 0%, transparent 100%);
     position: absolute;
     bottom: 0;
     left: 0;
@@ -236,6 +246,10 @@ onBeforeUnmount(() => {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
   font-size: 26px;
   font-weight: 600;
+}
+
+.vjs-time-tooltip {
+  display: none;
 }
 
 .vjs-duration {

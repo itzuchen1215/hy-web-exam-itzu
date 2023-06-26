@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { ref, type PropType, computed } from 'vue'
 import { useWindowSize } from '@vant/use'
+import type { SwipeInstance } from 'vant'
+import useMobile from '@/utils/useMobile';
 import type { IVideoListResponse } from '@/types/api'
 import VideoPlayer from '@/components/VideoPlayer.vue'
-import type { SwipeInstance } from 'vant'
 
 const props = defineProps({
   tabActive: {
@@ -17,12 +18,14 @@ const props = defineProps({
 })
 
 const { height } = useWindowSize()
+const { isMobile } = useMobile();
 const videoSwiper = ref<SwipeInstance | null>(null)
 
 const activeSwipeIndex = ref<number>(0)
 const isDragStart = ref<boolean>(false)
 
 const swipeItemHeight = computed(() => {
+  // 40 stands for height of tabbar
   return height.value - 40
 })
 
@@ -41,6 +44,17 @@ function handleDragEnd() {
 function isItemActive(index: number) {
   return props.tabActive && index === activeSwipeIndex.value
 }
+
+// Preventing the conflict between the first drag of the seekBar and the swipe event
+const touchable = ref(false);
+// Preventing swipe problem on desktop.
+if (!isMobile()) {
+  touchable.value = true;
+}
+function handleVideoTouchStart() {
+  touchable.value = true;
+}
+
 </script>
 
 <template>
@@ -51,12 +65,14 @@ function isItemActive(index: number) {
     :show-indicators="false"
     :height="swipeItemHeight"
     :duration="400"
+    :touchable="touchable"
     @drag-start="handleDragStart"
     @drag-end="handleDragEnd"
     @change="handleSwipeChange"
   >
     <van-swipe-item v-for="(item, index) in videoList" :key="index">
       <img
+        @dragstart.prevent
         class="video-cover"
         v-show="isItemActive(index) && isDragStart"
         :src="item.cover"
@@ -66,6 +82,7 @@ function isItemActive(index: number) {
         :video-src="item['play_url']"
         :video-active="isItemActive(index)"
         :poster="item.cover"
+        @touchstart="handleVideoTouchStart"
       />
     </van-swipe-item>
   </van-swipe>
