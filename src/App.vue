@@ -30,7 +30,6 @@ function handleClickMuteButton() {
 }
 
 provide('muted', muted)
-
 </script>
 
 <template>
@@ -67,12 +66,12 @@ provide('muted', muted)
   --van-tab-font-size: 16px;
   --van-tabs-line-height: 40px;
   --van-tabs-bottom-bar-width: 20px;
-  --van-tabs-bottom-bar-color: #FFF;
+  --van-tabs-bottom-bar-color: #fff;
   --van-tabbar-height: 40px;
   --van-tabbar-item-icon-size: 18px;
   --van-tabbar-item-font-size: 11px;
-  --van-tabbar-item-text-color: #FFFFFF80;
-  --van-tabbar-item-active-color: #FFF;
+  --van-tabbar-item-text-color: #ffffff80;
+  --van-tabbar-item-active-color: #fff;
 }
 
 .van-config-provider {

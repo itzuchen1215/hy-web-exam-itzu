@@ -1,4 +1,4 @@
 export enum ListType {
   Following = 1,
-  ForYou = 2,
+  ForYou = 2
 }

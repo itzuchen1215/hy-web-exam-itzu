@@ -2,7 +2,7 @@
 import { ref, type PropType, computed } from 'vue'
 import { useWindowSize } from '@vant/use'
 import type { SwipeInstance } from 'vant'
-import useMobile from '@/utils/useMobile';
+import useMobile from '@/utils/useMobile'
 import type { IVideoListResponse } from '@/types/api'
 import VideoPlayer from '@/components/VideoPlayer.vue'
 
@@ -18,7 +18,7 @@ const props = defineProps({
 })
 
 const { height } = useWindowSize()
-const { isMobile } = useMobile();
+const { isMobile } = useMobile()
 const videoSwiper = ref<SwipeInstance | null>(null)
 
 const activeSwipeIndex = ref<number>(0)
@@ -46,15 +46,14 @@ function isItemActive(index: number) {
 }
 
 // Preventing the conflict between the first drag of the seekBar and the swipe event
-const touchable = ref(false);
+const touchable = ref(false)
 // Preventing swipe problem on desktop.
 if (!isMobile()) {
-  touchable.value = true;
+  touchable.value = true
 }
 function handleVideoTouchStart() {
-  touchable.value = true;
+  touchable.value = true
 }
-
 </script>
 
 <template>

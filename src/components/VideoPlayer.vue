@@ -68,9 +68,8 @@ onMounted(() => {
     })
 
     player.value.ready(() => {
-
       player.value.on('click', () => {
-        emit('touchstart');
+        emit('touchstart')
         if (player.value.paused()) {
           player.value.play()
         } else {
@@ -80,8 +79,8 @@ onMounted(() => {
 
       // Prevent the conflict between the first drag of the seekBar and the swipe event
       player.value.one('touchstart', () => {
-        emit('touchstart');
-      });
+        emit('touchstart')
+      })
 
       // Autoplay the first video
       player.value.on('loadeddata', () => {
